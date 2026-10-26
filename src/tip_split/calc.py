@@ -20,10 +20,15 @@ def split_bill(bill, tip_pct=15, people=1) -> dict:
     """Return {bill, tip_pct, people, tip_total, grand_total, per_person} as Decimals (+ints)."""
     b = _to_decimal(bill)
     t = _to_decimal(tip_pct)
+    if not b.is_finite() or not t.is_finite():
+        raise ValueError("bill and tip_pct must be finite numbers")
     try:
-        n = int(people)
-    except (TypeError, ValueError) as e:
+        pd = Decimal(str(people))
+    except Exception as e:
         raise ValueError(f"people must be an integer >= 1, got {people!r}") from e
+    if not pd.is_finite() or pd % 1 != 0:
+        raise ValueError(f"people must be an integer >= 1, got {people!r}")
+    n = int(pd)
     if b < 0:
         raise ValueError("bill must be >= 0")
     if t < 0:

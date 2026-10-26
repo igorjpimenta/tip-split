@@ -58,3 +58,10 @@ def test_cli_bad_input():
         capture_output=True, text=True,
     )
     assert p.returncode == 2
+
+
+def test_float_people_rejected():
+    with pytest.raises(ValueError):
+        split_bill("100", "15", 2.5)
+    with pytest.raises(ValueError):
+        split_bill("100", "15", "2.5")
